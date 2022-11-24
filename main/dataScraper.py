@@ -1,12 +1,6 @@
-import json
-
-import pandas as pd
 import requests
-import datetime
-import pandas as np
-import sqlalchemy
 
-from Schonfeld_task.eventHandler import promptType
+from Schonfeld_task.main.eventHandler import promptType
 
 class ShortQuotaScraper:
     def __init__(self, db_path=r'sqlite:///Schonfeld_task/TWSE_SQ.db'):

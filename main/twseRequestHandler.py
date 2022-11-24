@@ -2,7 +2,7 @@ import datetime
 import json
 import pandas as pd
 
-from Schonfeld_task.eventHandler import promptType
+from Schonfeld_task.main.eventHandler import promptType
 
 class twseResponse:
     def __init__(self, res):
