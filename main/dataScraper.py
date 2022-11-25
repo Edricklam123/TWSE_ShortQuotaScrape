@@ -43,7 +43,7 @@ class ShortQuotaScraper:
                 # If has new data, we push and save the hash
                 self.pushFrame()
 
-        # Pass request data
+        # Parse the request data
 
 
 
