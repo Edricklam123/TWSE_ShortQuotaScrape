@@ -32,7 +32,7 @@ df['txtime'].to_list()
 df.query('txtime != ""')
 pd.DataFrame(res)
 
-engine = sqlalchemy.create_engine('sqlite:///Schonfeld_task/TWSE_SQ.db')
+engine = sqlalchemy.create_engine('sqlite:///Schonfeld_task/data/TWSE_SQ.db')
 
 df.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
 df_data.to_sql('TWSE_sq', engine, if_exists='replace', index=False)

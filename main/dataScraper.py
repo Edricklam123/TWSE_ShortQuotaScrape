@@ -12,7 +12,7 @@ from Schonfeld_task.main.eventHandler import promptType
 from Schonfeld_task.main.twseRequestHandler import twseResponse
 
 class ShortQuotaScraper:
-    def __init__(self, db_path=r'sqlite:///Schonfeld_task/TWSE_SQ.db'):
+    def __init__(self, db_path=r'sqlite:///Schonfeld_task/data/TWSE_SQ.db'):
         # XXX
         self.sqldb_path = db_path
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
