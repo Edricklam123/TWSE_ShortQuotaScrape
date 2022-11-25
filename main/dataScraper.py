@@ -42,7 +42,9 @@ class ShortQuotaScraper:
                 self.pushFrame(df_to_push, data_key, 'data_tb')
                 # Update the Hash
                 self.js_control[data_key]['hash'] = new_hash
-
+            else:
+                print(f"{promptType.SYS.value} No new data from this request...")
+        return None
 
         # Parse the request data
 
@@ -117,6 +119,7 @@ class ShortQuotaScraper:
         # Take out the data that should be inserted into the data table
         df_to_push = self._query_new_data(df_to_push, data_key)
         # Insert the new data into the data table
+        print(f'{promptType.SYS.value} Inserting {len(df_to_push)} rows of new data into table <{tb_name}>...')
         df_to_push.to_sql(tb_name, self.engine, if_exists='append', index=False)
 
         return None
@@ -146,7 +149,9 @@ class ShortQuotaScraper:
                             f"AND {data_table_name}.txtime != temp.txtime " \
                             f"AND {data_table_name}.request_date = temp.request_date)"
                 df_to_insert = pd.DataFrame(self.engine.execute(query_sql))
+                print(f'{promptType.SYS.value} Received {len(df_to_insert)} rows of new data...')
                 return df_to_insert
+        print(f'{promptType.SYS.value} Received completely new table with {len(df_new_tb)} rows of new data...')
         return df_new_tb
         # TODO: Delete the temp table? Actually not deleting is also fine
 
