@@ -37,7 +37,7 @@ engine = sqlalchemy.create_engine('sqlite:///data/TWSE_SQ.db')
 df.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
 df_data.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
 
-pd.read_sql('TWSE_SQ', engine)
+pd.read_sql('twse_sq', engine)
 pd.read_sql('TWSE_meta', engine)
 pd.read_sql('TWSE_sq', engine)
 pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
@@ -61,8 +61,11 @@ t = pd.read_sql('SELECT * FROM TWSE_sq WHERE stkno == "0050"', engine)
 
 # How about insert into new table, then merge and remove duplicate records delete the temp table
 df.to_sql('TWSE_sq_temp_2', engine, index=False)
+df_to_push.to_sql('twse_sq', engine, index=False, if_exists='replace')
 a = pd.read_sql('TWSE_sq', engine)
 b = pd.read_sql('TWSE_sq_temp', engine)
+pd.read_sql('temp', engine)
+pd.read_sql('temp', self.engine)
 a['txtime'].max()
 b['txtime'].max()
 

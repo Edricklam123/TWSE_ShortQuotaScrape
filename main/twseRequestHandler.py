@@ -8,7 +8,7 @@ from Schonfeld_task.main.eventHandler import promptType
 
 class twseResponse:
     """
-
+    Class to handle the twse response object
     """
 
     def __init__(self, res, res_time):
@@ -43,8 +43,13 @@ class twseResponse:
             js_data = self.res.json()
             df_data = pd.DataFrame(js_data[self.data_key])
 
-            # Formating the dataframe
-            df_data.insert(0, self.res_time)
+            # date strings
+            request_time = self.res_time.time()
+            request_date = self.res_time.date()
+
+            # Formatting the dataframe
+            df_data.insert(0, 'request_time', request_time)
+            df_data.insert(0, 'request_date', request_date)
             # TODO: change the names after checking meaning!
             return df_data
 
@@ -52,7 +57,8 @@ class twseResponse:
         if self.checkRequestStatus(self.res):
             js_data = self.res.json()
             df_meta = pd.DataFrame.from_dict({ k:js_data[k] for k in self.meta_keys}, orient='index')
-            df_meta.columns = [datetime.datetime.now()] # TODO: double check appropriate this column name or not
+            df_meta.columns = [self.res_time] # TODO: double check appropriate this column name or not
+            df_meta = df_meta.T
             return df_meta
 
     def returnHash(self):
