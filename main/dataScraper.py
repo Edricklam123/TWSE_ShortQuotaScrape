@@ -4,6 +4,9 @@ import json
 import pandas as pd
 import requests
 import datetime
+from typing import Union
+
+import sqlalchemy
 
 from Schonfeld_task.main.eventHandler import promptType
 from Schonfeld_task.main.twseRequestHandler import twseResponse
@@ -14,6 +17,8 @@ class ShortQuotaScraper:
         self.sqldb_path = db_path
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
         self.js_control_path = r'./Schonfeld_task/data/control.json'
+
+        self.engine = None
         self.js_control = None
 
         # void function to update
@@ -21,20 +26,22 @@ class ShortQuotaScraper:
 
         # TODO Websocket implementation
 
+
     def scrape(self, data_key='twse_sq'):
 
         # Request Data
         res = self.requestData(data_key)
+        res_time = datetime.datetime.now()
+
         # Check the requested Data
         if twseResponse.checkRequestStatus(res):
             # Create the data object
-            twse_res = twseResponse(res)
+            twse_res = twseResponse(res, res_time)
             # Check update
             new_hash = twse_res.returnHash()
             if self.checkHashUpdate(data_key, new_hash):
                 # If has new data, we push and save the hash
                 self.pushFrame()
-
 
         # Pass request data
 
@@ -49,12 +56,16 @@ class ShortQuotaScraper:
             js_control = json.loads(f.read())
         self.js_control = js_control
 
+    def loadDbEngine(self):
+        self.engine = sqlalchemy.create_engine(self.sqldb_path)
+
     def requestData(self, data_key):
         """
 
         :return: <requests.response>
         """
-        res = requests.get(self.sq_url)
+        self.readControlDict()
+        res = requests.get(self.js_control[data_key]['url'])
         date_time = datetime.datetime.now()
         date_time_str = date_time.strftime('%b %d, %T')
 
@@ -82,10 +93,17 @@ class ShortQuotaScraper:
 
 
 
-    def pushFrame(self, df_to_push:pd.DataFrame, tb_name):
+    def pushFrame(self, df_to_push:pd.DataFrame, data_key, tb_type:str):
+        """
 
-        data_tb_name = self.js_control
-        df_to_push.to_sql()
+        :param df_to_push:
+        :param data_key:
+        :param tb_type: <str> value in {'data', 'meta'}
+        :return:
+        """
+        self.readControlDict()
+        tb_name = self.js_control[data_key][tb_type]
+        df_to_push.to_sql(tb_name, self.engine, if_exists='replace')
 
     def exportFrame(self):
         pass
