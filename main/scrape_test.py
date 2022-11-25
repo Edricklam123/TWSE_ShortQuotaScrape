@@ -1,3 +1,5 @@
+import hashlib
+
 import requests
 import json
 import pandas as pd
@@ -21,6 +23,8 @@ rtcode：
 queryTime： UTC ?
 rtmessage: OK
 """
+# Hashing
+hashlib.md5(str(res['msgArray']).encode()).hexdigest()
 
 df = pd.DataFrame(res['msgArray'])
 df['txtime'].to_list()

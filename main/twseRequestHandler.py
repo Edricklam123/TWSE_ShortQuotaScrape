@@ -1,15 +1,22 @@
 import datetime
 import json
+import hashlib
 import pandas as pd
 
 from Schonfeld_task.main.eventHandler import promptType
 
 class twseResponse:
+    """
+
+    """
+
     def __init__(self, res):
+        """
+        :param res: <requests.response> the response that contains the TWSE short quota data request
+        """
         self.res = res
         self.data_key = 'msgArray' # note: only one key assumption
         self.meta_keys = ['userDelay', 'size', 'rtcode', 'queryTime', 'rtmessage']
-
 
     @staticmethod
     def checkRequestStatus(res):
@@ -28,14 +35,23 @@ class twseResponse:
         else:
             return data.strip()
 
-    def createFrame(self, data):
-        js_data = json.loads(data)
-        df_data = pd.DataFrame(js_data[self.data_key])
-        # TODO: change the names after checking meaning!
+    def createDataFrame(self):
+        if self.checkRequestStatus(self.res):
+            data = self.requestDataCleaner(self.res.text)
+            js_data = json.loads(data)
+            df_data = pd.DataFrame(js_data[self.data_key])
+            # TODO: change the names after checking meaning!
+            return df_data
 
+    def createMetaDataFrame(self):
+        if self.checkRequestStatus(self.res):
+            data = self.requestDataCleaner(self.res.text)
+            js_data = json.loads(data)
+            df_meta = pd.DataFrame.from_dict({ k:js_data[k] for k in self.meta_keys}, orient='index')
+            df_meta.columns = [datetime.datetime.now()] # TODO: double check appropriate this column name or not
+            return df_meta
 
-    def createMetaDataFrame(self, data):
-        js_data = json.loads(data)
-        df_meta = pd.DataFrame.from_dict({ k:js_data[k] for k in self.meta_keys}, orient='index')
-        df_meta.columns = [datetime.datetime.now()] # TODO: double check appropriate this column name or not
-        return df_meta
+    def returnHash(self):
+        """ Return the MD5 Hashed value for checking """
+        data_str = str(self.res[self.data_key])
+        return hashlib.md5(data_str.encode()).hexdigest()

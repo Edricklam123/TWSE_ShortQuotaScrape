@@ -7,15 +7,12 @@ class ShortQuotaScraper:
         # XXX
         self.sqlDbPath = db_path
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
-
+        # TODO Websocket implementation
 
     def requestData(self):
         res = requests.get(self.sq_url)
         if res:
             print(f'{promptType.SYS.value} Successfully extracted data at ')
-            res_text = res.text
-            res_text = self.requestDataCleaner(res_text)
-            self.createFrame(data=res_text)
 
 
     def pushFrame(self):
