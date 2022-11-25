@@ -34,8 +34,10 @@ pd.DataFrame(res)
 
 engine = sqlalchemy.create_engine('sqlite:///Schonfeld_task/TWSE_SQ.db')
 
-df.to_sql('TWSE_SQ', engine, if_exists='replace', index=False)
+df.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
 
 pd.read_sql('TWSE_SQ', engine)
+pd.read_sql('TWSE_meta', engine)
+pd.read_sql('TWSE_sq', engine)
 pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
 engine.execute('SELECT *')
