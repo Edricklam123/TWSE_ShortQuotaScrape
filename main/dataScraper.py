@@ -9,15 +9,15 @@ from dateutil.parser import parse
 
 import sqlalchemy
 
-from Schonfeld_task.main.eventHandler import promptType
-from Schonfeld_task.main.twseRequestHandler import twseResponse
+from twse_sq_scraper.main.eventHandler import promptType
+from twse_sq_scraper.main.twseRequestHandler import twseResponse
 
 class ShortQuotaScraper:
-    def __init__(self, db_path=r'sqlite:///Schonfeld_task/data/TWSE_SQ.db'):
+    def __init__(self, db_path=r'sqlite:///twse_sq_scraper/data/TWSE_SQ.db'):
         # Paths
         self.sqldb_path = db_path
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
-        self.js_control_path = r'./Schonfeld_task/data/control.json'
+        self.js_control_path = r'./twse_sq_scraper/data/control.json'
         # Variables
         self.engine = None
         self.js_control = None

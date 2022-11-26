@@ -1,6 +1,6 @@
 import time
 
-from Schonfeld_task.main.dataScraper import ShortQuotaScraper
+from twse_sq_scraper.main.dataScraper import ShortQuotaScraper
 
 
 if __name__ == '__main__':

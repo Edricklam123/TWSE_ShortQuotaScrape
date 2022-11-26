@@ -4,7 +4,7 @@ import hashlib
 import pandas as pd
 import requests
 
-from Schonfeld_task.main.eventHandler import promptType
+from twse_sq_scraper.main.eventHandler import promptType
 
 class twseResponse:
     """
