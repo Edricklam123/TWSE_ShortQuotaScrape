@@ -4,9 +4,10 @@ import hashlib
 import pandas as pd
 import requests
 
-from twse_sq_scraper.main.eventHandler import promptType
+from twse_sq_scraper.main.eventHandler import PromptType
 
-class twseResponse:
+
+class TwseResponse:
     """
     Class to handle the twse response object
     """
@@ -26,14 +27,14 @@ class twseResponse:
         if res.status_code == 200:
             return True
         else:
-            print(f'{promptType.ERROR.value} Request Error with code <{res.status_code}>')
+            print(f'{PromptType.ERROR.value} Request Error with code <{res.status_code}>')
             print(f'Request url: {res.url}')
             return False
 
     @staticmethod
     def requestDataCleaner(res):
         if not isinstance(res, requests.models.Response):
-            print(f'{promptType.ERROR.value} Unexpected request data, unable to clean, returning False.')
+            print(f'{PromptType.ERROR.value} Unexpected request data, unable to clean, returning False.')
             return False
         else:
             return res.text.strip()
