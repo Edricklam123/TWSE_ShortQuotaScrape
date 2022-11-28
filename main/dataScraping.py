@@ -1,8 +1,11 @@
-import datetime
+# Author: Edrick
+# Date: 11/25/2022
+import os
 import time
+import datetime
 
-from twse_sq_scraper.main.dataScraper import ShortQuotaScraper
-from twse_sq_scraper.main.eventHandler import PromptType
+from main.eventHandler import PromptType
+from main.dataScraper import ShortQuotaScraper
 
 
 if __name__ == '__main__':

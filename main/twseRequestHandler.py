@@ -1,12 +1,16 @@
-import datetime
+# Author: Edrick
+# Date: 11/25/2022
+
+# Import libraries
 import json
+import datetime
 import hashlib
 import pandas as pd
 import requests
 
-from twse_sq_scraper.main.eventHandler import PromptType
+from main.eventHandler import PromptType
 
-
+# Implementing class
 class TwseResponse:
     """
     Class to handle the twse response object

@@ -1,10 +1,14 @@
+# Author: Edrick
+# Date: 11/25/2022
+
+# Import libraries
 import hashlib
 
 import requests
-import json
-import pandas as pd
 import sqlalchemy
+import pandas as pd
 
+# Clumsy testing
 url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
 
 res = requests.get(url)

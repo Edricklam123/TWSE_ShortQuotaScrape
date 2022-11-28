@@ -1,5 +1,7 @@
-from enum import Enum
+# Author: Edrick
+# Date: 11/25/2022
 
+from enum import Enum
 
 class PromptType(Enum):
     SYS = '[SYS]'
