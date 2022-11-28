@@ -13,11 +13,11 @@ if __name__ == '__main__':
     }
 
     # Assistant variables
-    now_time = datetime.datetime.now().time()
     request_count = 0
 
     # Scraping data
     while True:
+        now_time = datetime.datetime.now().time()
         try:
             if now_time >= trading_hour['start'] and now_time <= trading_hour['end']:
                 print('-'*50)
@@ -26,6 +26,7 @@ if __name__ == '__main__':
                 time.sleep(6)
             else:
                 print(f"{PromptType.SYS.value} Stopping scraper, total request sent is {request_count}...")
+                break
         except Exception as err:
             print(f"{PromptType.ERROR.value} Encountered error: {err}, retry...")
 
