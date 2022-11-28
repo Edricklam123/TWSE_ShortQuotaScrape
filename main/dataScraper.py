@@ -13,16 +13,16 @@ import pandas as pd
 from typing import Union
 from dateutil.parser import parse
 
-from main.eventHandler import PromptType
-from main.twseRequestHandler import TwseResponse
+from eventHandler import PromptType
+from twseRequestHandler import TwseResponse
 
 
 class ShortQuotaScraper:
-    def __init__(self, db_path=r'sqlite:///../data/TWSE_SQ.db'):
+    def __init__(self, db_path=r'.../data/TWSE_SQ.db'):
         # Paths
-        self.sqldb_path = db_path
+        self.sqldb_path = f'sqlite:///{db_path}'
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
-        self.js_control_path = r'../data/control.json'
+        self.js_control_path = r'./data/control.json'
         # Variables
         self.engine = None
         self.js_control = None

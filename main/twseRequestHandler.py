@@ -8,7 +8,7 @@ import hashlib
 import pandas as pd
 import requests
 
-from main.eventHandler import PromptType
+from eventHandler import PromptType
 
 # Implementing class
 class TwseResponse:

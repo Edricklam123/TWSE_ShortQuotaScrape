@@ -1,19 +1,27 @@
 # Author: Edrick
 # Date: 11/25/2022
 import os
+import sys
 import time
 import datetime
 
-from main.eventHandler import PromptType
-from main.dataScraper import ShortQuotaScraper
+# Directory tuner to ensure the path are correctly fixed, you can re-organize again with __init__.py
+MAIN_DIR = os.path.dirname(os.path.abspath('__file__'))
+sys.path.append(MAIN_DIR)
 
+from eventHandler import PromptType
+from dataScraper import ShortQuotaScraper
+
+# Constant variables
+trading_hour = {
+    'start': datetime.time(8, 50),
+    'end': datetime.time(17, 0)
+}
 
 if __name__ == '__main__':
-    tsqs = ShortQuotaScraper()
-    trading_hour = {
-        'start': datetime.time(8, 50),
-         'end': datetime.time(17, 0)
-    }
+    # Define the scraper
+    db_path = os.path.join(MAIN_DIR, 'data', 'TWSE_SQ.db')
+    tsqs = ShortQuotaScraper(db_path)
 
     # Assistant variables
     request_count = 0
@@ -35,6 +43,8 @@ if __name__ == '__main__':
 
 
 if __name__ == '__debug__':
-        self = tsqs
-        df = pd.read_sql('twse_sq', self.engine)
-        df.query('stkno == "9933"')
+    import pandas as pd
+
+    self = tsqs
+    df = pd.read_sql('twse_sq', self.engine)
+    df.query('stkno == "9933"')
