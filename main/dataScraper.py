@@ -9,8 +9,9 @@ from dateutil.parser import parse
 
 import sqlalchemy
 
-from twse_sq_scraper.main.eventHandler import promptType
-from twse_sq_scraper.main.twseRequestHandler import twseResponse
+from twse_sq_scraper.main.eventHandler import PromptType
+from twse_sq_scraper.main.twseRequestHandler import TwseResponse
+
 
 class ShortQuotaScraper:
     def __init__(self, db_path=r'sqlite:///twse_sq_scraper/data/TWSE_SQ.db'):
@@ -31,9 +32,9 @@ class ShortQuotaScraper:
         res_time = datetime.datetime.now()
 
         # Check the requested Data
-        if twseResponse.checkRequestStatus(res):
+        if TwseResponse.checkRequestStatus(res):
             # Create the data object
-            twse_res = twseResponse(res, res_time)
+            twse_res = TwseResponse(res, res_time)
             # Check update
             new_hash = twse_res.returnHash()
             if self.checkHashUpdate(data_key, new_hash):
@@ -41,14 +42,26 @@ class ShortQuotaScraper:
                 df_to_push = twse_res.createDataFrame()
                 self.pushFrame(df_to_push, data_key, 'data_tb')
                 # Update the Hash
-                self.js_control[data_key]['hash'] = new_hash
+                self.saveHash(data_key, new_hash)
+                self.checkDuplicated() # TODO: debug func
+                return True
             else:
-                print(f"{promptType.SYS.value} No new data from this request...")
+                print(f"{PromptType.SYS.value} No new data from this request...")
+                return False
         return None
 
         # Parse the request data
 
-
+    def checkDuplicated(self):
+        """
+        Void func
+        :return:
+        """
+        df = pd.read_sql('twse_sq', self.engine)
+        if any(df[['stkno', 'txtime']].duplicated()):
+            print(df[df[['stkno', 'txtime']].duplicated()].sort_values('stkno'))
+        else:
+            print(f'{PromptType.SYS.value} == No duplicated data ==')
 
     def readControlDict(self):
         """
@@ -83,7 +96,7 @@ class ShortQuotaScraper:
         date_time_str = date_time.strftime('%b %d, %T')
         # Print out some debug message
         if res:
-            print(f'{promptType.SYS.value} Successfull extracted data at: {date_time_str}')
+            print(f'{PromptType.SYS.value} Successfull extracted data at: {date_time_str}')
         return res
 
     def checkHashUpdate(self, data_key, new_hash):
@@ -117,10 +130,11 @@ class ShortQuotaScraper:
         self.readControlDict()
         tb_name = self.js_control[data_key][tb_type]
         # Take out the data that should be inserted into the data table
-        df_to_push = self._query_new_data(df_to_push, data_key)
+        df_to_insert = self._query_new_data(df_to_push, data_key)
         # Insert the new data into the data table
-        print(f'{promptType.SYS.value} Inserting {len(df_to_push)} rows of new data into table <{tb_name}>...')
-        df_to_push.to_sql(tb_name, self.engine, if_exists='append', index=False)
+        print(f'{PromptType.SYS.value} Inserting {len(df_to_insert)} rows of new data into table <{tb_name}>...')
+        df_to_insert.to_sql(tb_name, self.engine, if_exists='append', index=False)
+
 
         return None
 
@@ -142,16 +156,17 @@ class ShortQuotaScraper:
                 # Create new table
                 df_new_tb.to_sql('temp', self.engine, if_exists='replace', index=False)
                 # Query the new data
+                # Criteria -> drop those records that already have same date, same stk number and same sliblimit
                 query_sql = f"SELECT * FROM temp " \
-                            f"WHERE EXISTS " \
+                            f"WHERE NOT EXISTS " \
                             f"(SELECT * FROM {data_table_name} " \
                             f"WHERE {data_table_name}.stkno = temp.stkno " \
-                            f"AND {data_table_name}.txtime != temp.txtime " \
+                            f"AND {data_table_name}.txtime = temp.txtime " \
                             f"AND {data_table_name}.request_date = temp.request_date)"
                 df_to_insert = pd.DataFrame(self.engine.execute(query_sql))
-                print(f'{promptType.SYS.value} Received {len(df_to_insert)} rows of new data...')
+                print(f'{PromptType.SYS.value} Received {len(df_to_insert)} rows of new data...')
                 return df_to_insert
-        print(f'{promptType.SYS.value} Received completely new table with {len(df_new_tb)} rows of new data...')
+        print(f'{PromptType.SYS.value} Received completely new table with {len(df_new_tb)} rows of new data...')
         return df_new_tb
         # TODO: Delete the temp table? Actually not deleting is also fine
 

@@ -31,7 +31,7 @@ df['txtime'].to_list()
 df.query('txtime != ""')
 pd.DataFrame(res)
 
-engine = sqlalchemy.create_engine('sqlite:///Schonfeld_task/data/TWSE_SQ.db')
+engine = sqlalchemy.create_engine('sqlite:///twse_sq_scraper/data/TWSE_SQ.db')
 engine = sqlalchemy.create_engine('sqlite:///data/TWSE_SQ.db')
 
 df.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
@@ -42,7 +42,12 @@ pd.read_sql('TWSE_meta', engine)
 pd.read_sql('TWSE_sq', engine)
 pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
 engine.connect().execute('SELECT * FROM TWSE_sq')
+pd.read_sql('twse_sq', engine).query('stkno == "6505"')
 
+engine.execute("DROP TABLE IF EXISTS twse_sq;")
+
+inspector = sqlalchemy.inspect(engine)
+inspector.get_table_names()
 
 t = pd.read_sql('TWSE_sq', engine)['txtime']
 pd.to_datetime(t).max()

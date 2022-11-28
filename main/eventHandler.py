@@ -1,6 +1,7 @@
 from enum import Enum
 
-class promptType(Enum):
+
+class PromptType(Enum):
     SYS = '[SYS]'
     WARNING = '[WARNING]'
     ERROR = '[ERROR]'
