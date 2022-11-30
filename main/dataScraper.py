@@ -62,8 +62,8 @@ class ShortQuotaScraper:
         :return:
         """
         df = pd.read_sql('twse_sq', self.engine)
-        if any(df[['stkno', 'txtime']].duplicated()):
-            print(df[df[['stkno', 'txtime']].duplicated()].sort_values('stkno'))
+        if any(df[['request_date', 'stkno', 'txtime']].duplicated()):
+            print(df[df[['request_date', 'stkno', 'txtime']].duplicated()].sort_values('stkno'))
         else:
             print(f'{PromptType.SYS.value} == No duplicated data ==')
 

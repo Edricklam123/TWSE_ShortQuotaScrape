@@ -46,7 +46,7 @@ pd.read_sql('TWSE_meta', engine)
 pd.read_sql('TWSE_sq', engine)
 pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
 engine.connect().execute('SELECT * FROM TWSE_sq')
-pd.read_sql('twse_sq', engine).query('stkno == "6505"')
+pd.read_sql('twse_sq', engine).query('stkno == "9945"')
 
 engine.execute("DROP TABLE IF EXISTS twse_sq;")
 

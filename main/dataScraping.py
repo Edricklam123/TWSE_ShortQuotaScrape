@@ -7,7 +7,7 @@ import datetime
 
 # Directory tuner to ensure the path are correctly fixed, you can re-organize again with __init__.py
 MAIN_DIR = os.path.dirname(os.path.abspath('__file__'))
-sys.path.append(MAIN_DIR)
+sys.path.append(os.path.join(MAIN_DIR, 'main'))
 
 from eventHandler import PromptType
 from dataScraper import ShortQuotaScraper
