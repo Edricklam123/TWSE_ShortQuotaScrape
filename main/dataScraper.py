@@ -1,24 +1,28 @@
+# Author: Edrick
+# Date: 11/25/2022
+
+# Import libraries
 import os
 import json
 
-import pandas as pd
 import requests
 import datetime
+import sqlalchemy
+import pandas as pd
+
 from typing import Union
 from dateutil.parser import parse
 
-import sqlalchemy
-
-from twse_sq_scraper.main.eventHandler import PromptType
-from twse_sq_scraper.main.twseRequestHandler import TwseResponse
+from eventHandler import PromptType
+from twseRequestHandler import TwseResponse
 
 
 class ShortQuotaScraper:
-    def __init__(self, db_path=r'sqlite:///twse_sq_scraper/data/TWSE_SQ.db'):
+    def __init__(self, db_path=r'.../data/TWSE_SQ.db'):
         # Paths
-        self.sqldb_path = db_path
+        self.sqldb_path = f'sqlite:///{db_path}'
         self.sq_url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
-        self.js_control_path = r'./twse_sq_scraper/data/control.json'
+        self.js_control_path = r'./data/control.json'
         # Variables
         self.engine = None
         self.js_control = None
@@ -58,8 +62,8 @@ class ShortQuotaScraper:
         :return:
         """
         df = pd.read_sql('twse_sq', self.engine)
-        if any(df[['stkno', 'txtime']].duplicated()):
-            print(df[df[['stkno', 'txtime']].duplicated()].sort_values('stkno'))
+        if any(df[['request_date', 'stkno', 'txtime']].duplicated()):
+            print(df[df[['request_date', 'stkno', 'txtime']].duplicated()].sort_values('stkno'))
         else:
             print(f'{PromptType.SYS.value} == No duplicated data ==')
 

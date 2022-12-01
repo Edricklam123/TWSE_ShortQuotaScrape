@@ -1,10 +1,14 @@
+# Author: Edrick
+# Date: 11/25/2022
+
+# Import libraries
 import hashlib
 
 import requests
-import json
-import pandas as pd
 import sqlalchemy
+import pandas as pd
 
+# Clumsy testing
 url = r'https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp'
 
 res = requests.get(url)
@@ -42,7 +46,7 @@ pd.read_sql('TWSE_meta', engine)
 pd.read_sql('TWSE_sq', engine)
 pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
 engine.connect().execute('SELECT * FROM TWSE_sq')
-pd.read_sql('twse_sq', engine).query('stkno == "6505"')
+pd.read_sql('twse_sq', engine).query('stkno == "9945"')
 
 engine.execute("DROP TABLE IF EXISTS twse_sq;")
 
