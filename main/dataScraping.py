@@ -14,7 +14,7 @@ from dataScraper import ShortQuotaScraper
 
 # Constant variables
 trading_hour = {
-    'start': datetime.time(8, 50),
+    'start': datetime.time(8, 30),
     'end': datetime.time(17, 0)
 }
 
