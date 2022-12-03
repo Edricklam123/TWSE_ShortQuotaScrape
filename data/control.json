@@ -1,7 +1,7 @@
 {
     "twse_sq": {
         "url": "https://mis.twse.com.tw/stock/api/getStockSblsCap.jsp",
-        "hash": "5f300072ef0fd877f4dc96bc62ffc6a2",
+        "hash": "8571edfa5a8561c8ea540f733219f70f",
         "data_tb": "twse_sq",
         "meta_tb": "twse_sq_meta"
     }
