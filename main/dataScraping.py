@@ -14,6 +14,7 @@ from dataScraper import ShortQuotaScraper
 
 # Constant variables
 trading_hour = {
+    # Should change to UTC time if the codes will be running on cloud/other automation platform
     'start': datetime.time(8, 30),
     'end': datetime.time(17, 0)
 }
