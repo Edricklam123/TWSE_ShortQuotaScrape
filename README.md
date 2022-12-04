@@ -31,7 +31,6 @@ Url: https://mis.twse.com.tw/stock/sblInquiryCap.jsp?lang=en_use&oddFlag=undefin
 - 借券餘額 Definition?
   - 代表借入證券尚未返還的數額
   - 因為外資將資金匯入台灣後，必須在一定時限內投入市場，但有些時候股價並不在一個理想的價位，因此外資有時候會先利用借券的方式暫時將資金投入市場，而相關成本只有約定的借券利息而已。
--
 
 ## Task requirement
 
