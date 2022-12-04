@@ -25,9 +25,8 @@ class TwseResponse:
         self.data_key = 'msgArray' # note: only one key assumption
         self.meta_keys = ['userDelay', 'size', 'rtcode', 'queryTime', 'rtmessage']
 
-
     @staticmethod
-    def checkRequestStatus(res):
+    def check_response_status(res):
         if res.status_code == 200:
             return True
         else:
@@ -36,15 +35,15 @@ class TwseResponse:
             return False
 
     @staticmethod
-    def requestDataCleaner(res):
+    def request_data_cleaner(res):
         if not isinstance(res, requests.models.Response):
             print(f'{PromptType.ERROR.value} Unexpected request data, unable to clean, returning False.')
             return False
         else:
             return res.text.strip()
 
-    def createDataFrame(self):
-        if self.checkRequestStatus(self.res):
+    def create_dataframe(self):
+        if self.check_response_status(self.res):
             js_data = self.res.json()
             df_data = pd.DataFrame(js_data[self.data_key])
 
@@ -55,18 +54,17 @@ class TwseResponse:
             # Formatting the dataframe
             df_data.insert(0, 'request_time', request_time)
             df_data.insert(0, 'request_date', request_date)
-            # TODO: change the names after checking meaning!
             return df_data
 
-    def createMetaDataFrame(self):
-        if self.checkRequestStatus(self.res):
+    def create_meta_dataframe(self):
+        if self.check_response_status(self.res):
             js_data = self.res.json()
             df_meta = pd.DataFrame.from_dict({ k:js_data[k] for k in self.meta_keys}, orient='index')
             df_meta.columns = [self.res_time] # TODO: double check appropriate this column name or not
             df_meta = df_meta.T
             return df_meta
 
-    def returnHash(self):
+    def get_hash(self):
         """ Return the MD5 Hashed value for checking """
         js_data = self.res.json()
         data_str = str(js_data[self.data_key])

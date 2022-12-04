@@ -18,6 +18,9 @@ from twseRequestHandler import TwseResponse
 
 
 class ShortQuotaScraper:
+    """
+    The main TWSE Short Quota Scraper
+    """
     def __init__(self, db_path=r'.../data/TWSE_SQ.db'):
         # Paths
         self.sqldb_path = f'sqlite:///{db_path}'
@@ -27,27 +30,27 @@ class ShortQuotaScraper:
         self.engine = None
         self.js_control = None
         # void function to load the variables
-        self.readControlDict()
-        self.loadDbEngine()
+        self.read_control_dict()
+        self.load_db_engine()
 
     def scrape(self, data_key='twse_sq'):
         # Request Data
-        res = self.requestData(data_key)
+        res = self.request_data(data_key)
         res_time = datetime.datetime.now()
 
         # Check the requested Data
-        if TwseResponse.checkRequestStatus(res):
+        if TwseResponse.check_response_status(res):
             # Create the data object
             twse_res = TwseResponse(res, res_time)
             # Check update
-            new_hash = twse_res.returnHash()
-            if self.checkHashUpdate(data_key, new_hash):
+            new_hash = twse_res.get_hash()
+            if self.check_hash_update(data_key, new_hash):
                 # If has new data, we push and save the hash
-                df_to_push = twse_res.createDataFrame()
-                self.pushFrame(df_to_push, data_key, 'data_tb')
+                df_to_push = twse_res.create_dataframe()
+                self.push_frame(df_to_push, data_key, 'data_tb')
                 # Update the Hash
-                self.saveHash(data_key, new_hash)
-                self.checkDuplicated() # TODO: debug func
+                self.save_hash(data_key, new_hash)
+                self.check_duplicated()
                 return True
             else:
                 print(f"{PromptType.SYS.value} No new data from this request...")
@@ -56,7 +59,7 @@ class ShortQuotaScraper:
 
         # Parse the request data
 
-    def checkDuplicated(self):
+    def check_duplicated(self):
         """
         Void func
         :return:
@@ -67,7 +70,7 @@ class ShortQuotaScraper:
         else:
             print(f'{PromptType.SYS.value} == No duplicated data ==')
 
-    def readControlDict(self):
+    def read_control_dict(self):
         """
         void function to update self.js_control member
         :return:
@@ -76,24 +79,22 @@ class ShortQuotaScraper:
             js_control = json.loads(f.read())
         self.js_control = js_control
 
-    def _exportControlDict(self):
+    def _export_control_dict(self):
         """
         """
         with open(self.js_control_path, 'w') as f:
             f.write(json.dumps(self.js_control, indent=4))
 
-
-    def loadDbEngine(self):
+    def load_db_engine(self):
         """ Load the sql engine into the object """
         self.engine = sqlalchemy.create_engine(self.sqldb_path)
 
-
-    def requestData(self, data_key):
+    def request_data(self, data_key):
         """
 
         :return: <requests.response>
         """
-        self.readControlDict()
+        self.read_control_dict()
         # Make request to the corresponding url according to the data_key
         res = requests.get(self.js_control[data_key]['url'])
         date_time = datetime.datetime.now()
@@ -103,26 +104,24 @@ class ShortQuotaScraper:
             print(f'{PromptType.SYS.value} Successfull extracted data at: {date_time_str}')
         return res
 
-    def checkHashUpdate(self, data_key, new_hash):
+    def check_hash_update(self, data_key, new_hash):
         """
 
         :param data_key:
         :param new_hash:
         :return: <bool> if the hash is different -> return True, else False
         """
-        self.readControlDict()
+        self.read_control_dict()
         return self.js_control[data_key]['hash'] != new_hash
 
-    def saveHash(self, data_key, new_hash):
-        self.readControlDict()
+    def save_hash(self, data_key, new_hash):
+        self.read_control_dict()
         self.js_control[data_key]['hash'] = new_hash
         with open(self.js_control_path, 'w') as f:
             f.write(json.dumps(self.js_control, indent=4))
-        self.readControlDict()
+        self.read_control_dict()
 
-
-
-    def pushFrame(self, df_to_push:pd.DataFrame, data_key, tb_type:str):
+    def push_frame(self, df_to_push:pd.DataFrame, data_key, tb_type:str):
         """
 
         :param df_to_push:
@@ -131,7 +130,7 @@ class ShortQuotaScraper:
         :return:
         """
         # Update the js_control
-        self.readControlDict()
+        self.read_control_dict()
         tb_name = self.js_control[data_key][tb_type]
         # Take out the data that should be inserted into the data table
         df_to_insert = self._query_new_data(df_to_push, data_key)
@@ -174,8 +173,5 @@ class ShortQuotaScraper:
         return df_new_tb
         # TODO: Delete the temp table? Actually not deleting is also fine
 
-
-
-
-    def exportFrame(self):
+    def export_frame(self):
         pass

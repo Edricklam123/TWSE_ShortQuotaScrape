@@ -3,6 +3,7 @@
 
 from enum import Enum
 
+
 class PromptType(Enum):
     SYS = '[SYS]'
     WARNING = '[WARNING]'

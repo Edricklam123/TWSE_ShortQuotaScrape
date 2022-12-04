@@ -44,7 +44,7 @@ df_data.to_sql('TWSE_sq', engine, if_exists='replace', index=False)
 pd.read_sql('twse_sq', engine)
 pd.read_sql('TWSE_meta', engine)
 pd.read_sql('TWSE_sq', engine)
-pd.read_sql('TWSE_SQ', engine).query("stkno == '0050'")
+pd.read_sql('twse_sq', engine).query("stkno == '0050'")
 engine.connect().execute('SELECT * FROM TWSE_sq')
 pd.read_sql('twse_sq', engine).query('stkno == "9945"')
 
