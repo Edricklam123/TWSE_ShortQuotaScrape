@@ -1,5 +1,7 @@
 # TWSE_ShortQuotaScrape Project
 
+### Final Presentation: [View PDF Here](./misc/TWSE_SQ_Project.pdf)
+
 ## Description
 
 Real time handling and alert system for TWSE Short Quota page <br>
